@@ -1,17 +1,17 @@
-resource "aws_alb" "server_alb" {
+resource "aws_alb" "client_alb" {
   name_prefix = "srv-"
   load_balancer_type = "application"
-  security_groups = [aws_security_group.server_alb.id]
+  security_groups = [aws_security_group.client_alb.id]
   subnets = aws_subnet.public.*.id
   idle_timeout = 60
   ip_address_type = "dualstack"
 
   tags = {
-    Name = "${var.default_tags.project}-server-alb"
+    Name = "${var.default_tags.project}-client-alb"
   }
 }
 
-resource "aws_alb_target_group" "server_alb_targets" {
+resource "aws_alb_target_group" "client_alb_targets" {
   name_prefix = "srv-"
   port = 9090
   protocol = "HTTP"
@@ -30,20 +30,20 @@ resource "aws_alb_target_group" "server_alb_targets" {
   }
 
   tags = {
-    Name = "${var.default_tags.project}-server-tg"
+    Name = "${var.default_tags.project}-client-tg"
   }
 
 
 }
 
 
-resource "aws_alb_listener" "server_alb_http_80" {
-  load_balancer_arn = aws_alb.server_alb.arn
+resource "aws_alb_listener" "client_alb_http_80" {
+  load_balancer_arn = aws_alb.client_alb.arn
   port = 80
   protocol = "HTTP"
 
   default_action {
     type = "forward"
-    target_group_arn = aws_alb_target_group.server_alb_targets.arn
+    target_group_arn = aws_alb_target_group.client_alb_targets.arn
   }
 }

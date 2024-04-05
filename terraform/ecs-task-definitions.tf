@@ -1,12 +1,12 @@
-resource "aws_ecs_task_definition" "server" {
-  family                = "${var.default_tags.project}-server"
+resource "aws_ecs_task_definition" "client" {
+  family                = "${var.default_tags.project}-client"
   requires_compatibilities = ["FARGATE"]
   memory = 512
   cpu = 256
   network_mode = "awsvpc"
   container_definitions = jsonencode([
     {
-        name = "server"
+        name = "client"
         image = "nicholasjackson/fake-service:v0.23.1"
         cpu = 0
         essential = true
@@ -21,11 +21,11 @@ resource "aws_ecs_task_definition" "server" {
         environment = [
           {
             name = "NAME"
-            value = "server"
+            value = "client"
           },
           {
             name = "MESSAGE"
-            value = "Hello from server!"
+            value = "Hello from client!"
           }
         ]
     }
